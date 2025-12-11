@@ -18,7 +18,7 @@ export interface FetchNotesParams {
   page?: number;
   perPage?: number;
   search?: string;
-  tag?: string; // Доданий параметр для фільтрації
+  tag?: string; // Доданий параметр
 }
 
 export interface FetchNotesResponse {
