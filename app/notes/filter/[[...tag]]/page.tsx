@@ -1,62 +1,43 @@
-import axios from 'axios';
-import type { Note, NoteTag } from '@/types/note';
+import {
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from "@tanstack/react-query";
+import { fetchNotes } from "@/lib/api";
+import type { FetchNotesResponse } from "@/lib/api";
+import NoteList from "@/components/NoteList/NoteList";
 
-const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN as string | undefined;
+export default async function FilteredNotesPage({
+  params,
+}: {
+  params: Promise<{ tag?: string[] }>;
+}) {
+  const { tag } = await params;
+  
+  // Отримуємо тег з URL. Якщо це 'all' або undefined, передаємо undefined в API
+  const selectedTag = tag?.[0];
+  const apiTag = selectedTag === 'all' ? undefined : selectedTag;
 
-if (!token) {
-  throw new Error('NEXT_PUBLIC_NOTEHUB_TOKEN is missing');
-}
+  const queryClient = new QueryClient();
 
-const api = axios.create({
-  baseURL: 'https://notehub-public.goit.study/api',
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
-
-export interface FetchNotesParams {
-  page?: number;
-  perPage?: number;
-  search?: string;
-  tag?: string; // Доданий параметр
-}
-
-export interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
-}
-
-export interface CreateNotePayload {
-  title: string;
-  content: string;
-  tag: NoteTag;
-}
-
-export async function fetchNotes(
-  params: FetchNotesParams,
-): Promise<FetchNotesResponse> {
-  const { page = 1, perPage = 12, search, tag } = params;
-
-  const { data } = await api.get<FetchNotesResponse>('/notes', {
-    params: { page, perPage, search, tag },
+  // Виконуємо попередній запит на сервері
+  await queryClient.prefetchQuery({
+    queryKey: ["notes", 1, "", apiTag],
+    queryFn: () => fetchNotes({ page: 1, perPage: 12, tag: apiTag }),
   });
 
-  return data;
-}
+  // Отримуємо дані з кешу
+  const data = queryClient.getQueryData<FetchNotesResponse>(["notes", 1, "", apiTag]);
 
-export async function createNote(
-  payload: CreateNotePayload,
-): Promise<Note> {
-  const { data } = await api.post<Note>('/notes', payload);
-  return data;
-}
-
-export async function deleteNote(id: string): Promise<Note> {
-  const { data } = await api.delete<Note>(`/notes/${id}`);
-  return data;
-}
-
-export async function fetchNoteById(id: string): Promise<Note> {
-  const { data } = await api.get<Note>(`/notes/${id}`);
-  return data;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+       {data?.notes && data.notes.length > 0 ? (
+          <NoteList notes={data.notes} />
+       ) : (
+          <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
+            No notes found for this tag.
+          </p>
+       )}
+    </HydrationBoundary>
+  );
 }
