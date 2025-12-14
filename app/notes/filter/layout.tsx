@@ -1,22 +1,16 @@
-import React from 'react';
-import css from '@/app/notes/NotesPage.module.css'; 
+import { ReactNode } from 'react';
+import css from './layout.module.css';
 
-export default function Layout({
-  children,
-  sidebar,
-  modal,
-}: {
-  children: React.ReactNode;
-  sidebar: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+interface FilterLayoutProps {
+  sidebar: ReactNode;
+  children: ReactNode;
+}
+
+export default function FilterLayout({ sidebar, children }: FilterLayoutProps) {
   return (
-    <div className={css.app}>
-      <div style={{ display: 'flex', gap: '24px', marginTop: '20px' }}>
-        <aside style={{ width: '250px', flexShrink: 0 }}>{sidebar}</aside>
-        <div style={{ flex: 1 }}>{children}</div>
-      </div>
-      {modal}
+    <div className={css.container}>
+      <aside className={css.sidebar}>{sidebar}</aside>
+      <main className={css.notesWrapper}>{children}</main>
     </div>
   );
 }

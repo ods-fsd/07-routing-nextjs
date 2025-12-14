@@ -1,20 +1,16 @@
-import Link from 'next/link';
-import css from './Sidebar.module.css';
-import { NoteTag } from '@/types/note';
+'use client';
 
-const tags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+import Link from 'next/link';
+import css from './page.module.css';
+
+const tags = ['all', 'Work', 'Personal', 'Study', 'Other'];
 
 export default function SidebarNotes() {
   return (
     <ul className={css.menuList}>
-      <li className={css.menuItem}>
-        <Link href="/notes/filter/all" className={css.menuLink}>
-          All notes
-        </Link>
-      </li>
-      {tags.map((tag) => (
+      {tags.map(tag => (
         <li key={tag} className={css.menuItem}>
-          <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
+          <Link href={tag === 'all' ? '/notes/filter/all' : `/notes/filter/${tag}`} className={css.menuLink}>
             {tag}
           </Link>
         </li>
