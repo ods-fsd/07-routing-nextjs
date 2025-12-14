@@ -4,7 +4,7 @@ import type { Note } from '@/types/note';
 export const TAGS = ["Work", "Personal", "Important", "Ideas", "Todo"] as const;
 export type Tag = (typeof TAGS)[number];
 
-const API_URL = 'https://notehub.net.ua/api/notes';
+const API_URL = 'https://notehub-public.goit.study/api/notes';
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
