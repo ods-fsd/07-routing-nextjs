@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Note } from '@/types/note';
 
-export const TAGS = ["Work", "Personal", "Important", "Ideas", "Todo"] as const;
+export const TAGS = ["Todo", "Work", "Personal", "Meeting", "Shopping"] as const;
 export type Tag = (typeof TAGS)[number];
 
 const API_URL = 'https://notehub-public.goit.study/api/notes';

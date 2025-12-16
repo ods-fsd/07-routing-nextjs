@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import css from './NoteForm.module.css';
 import { createNote } from '@/lib/api';
 import type { CreateNoteBody } from '@/lib/api';
-import type { NoteTag } from '../../types/note';
 
 interface NoteFormProps {
   onClose: () => void;
@@ -85,11 +84,11 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             <label htmlFor="tag">Tag (optional)</label>
             <Field as="select" id="tag" name="tag" className={css.select}>
               <option value="">Select a tag</option>
+              <option value="Todo">Todo</option>
               <option value="Work">Work</option>
               <option value="Personal">Personal</option>
-              <option value="Important">Important</option>
-              <option value="Ideas">Ideas</option>
-              <option value="Todo">Todo</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Shopping">Shopping</option>
             </Field>
           </div>
 

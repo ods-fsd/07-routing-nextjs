@@ -20,7 +20,7 @@ interface NotesProps {
 export default function NotesClient({ tag }: NotesProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebounce(search, 500); // ✅ Додано debounce
+  const [debouncedSearch] = useDebounce(search, 500);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
@@ -50,10 +50,8 @@ export default function NotesClient({ tag }: NotesProps) {
       <div className={css.toolbar}>
         <SearchBox value={search} onChange={handleSearchChange} />
 
-        {/* ✅ Pagination завжди рендериться */}
         <Pagination page={page} totalPages={totalPages} onChange={setPage} />
 
-        {/* ✅ Додано кнопку та модалку */}
         <button
           type="button"
           className={css.button}
@@ -63,10 +61,8 @@ export default function NotesClient({ tag }: NotesProps) {
         </button>
       </div>
 
-      {/* ✅ NoteList рендериться тільки якщо є нотатки */}
       {notes.length > 0 && <NoteList notes={notes} />}
 
-      {/* ✅ Додано модалку */}
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm onClose={() => setIsModalOpen(false)} />
